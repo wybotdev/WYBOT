@@ -10,7 +10,7 @@ WYBOTFramework仅供经过认证的第三方开发者使用。
 
 ### Swift Package Manager
 
-在XCode中选择Swift package -> Add Package dependency,使用下面的URL添加package到项目中。
+在XCode中选择Swift package -> Add Package dependency,使用git@github.com:wybotdev/WYBOT.git 添加package到项目中。
 然后在项目中```import WYBOTFramewokr```按下面的列子使用
 
 ## Fucntions
@@ -34,7 +34,7 @@ WYBOTFramework仅供经过认证的第三方开发者使用。
 
 在头部引用WYLib库
 ```
-import WYLib
+import WYBOTFramework
 
 ```
 配置SDK API Key, 联系开发者获取api key
@@ -239,3 +239,24 @@ let result = wylib.setCycleTimer(.onec, to: deviceId, with: token)
 
 ```
 
+#### 通过wifi查询
+        /// 查询清洗模式
+        /// 通过蓝牙和物联网同时发送请求
+        /// - Returns: 返回清洗模式enum
+        /// 模式说明
+        /// .floor 池底模式
+        /// .wall 池壁模式
+        ///    .waterline 水线模式
+        ///    .combo 先清洗池壁，在清洗池底。
+        ///    .full 标准全池模式，同时清洗池壁和池底
+        ///    .eco 节能模式，节能模式只清洗池底
+        ///    .turbo 强力清洗模式，强力模式只清洗池底
+        ///    combo和full的不同是combo 会先清洗一段时间池壁，剩下的时间都清洗池底。full是同时清洗，遇到墙壁就先上墙。
+    public func cleanMode(deviceId: String) async throws -> AsyncThrowingStream<WYCleanMode, Error> 
+    
+#### 通过wifi设置
+        /// 设置循环预约
+        /// 通过蓝牙和物联网设置
+        /// - Parameter timer: WYCycleTimer 结构体
+        /// - Returns: 成功后返回true，返回false代表设置未生效
+    public func setCycleTimer(_ timer: WYCycleTimer, to deviceId: String, with token: String) async throws -> WYCycleTimer 
