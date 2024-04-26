@@ -1,0 +1,798 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios15.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name WYBOTFramework
+import CoreBluetooth
+import CryptoKit
+import Foundation
+import Photos
+import Swift
+import SwiftUI
+import UIKit
+@_exported import WYBOTFramework
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+final public class LightMQTT {
+  public enum MQTTMessageParserState {
+    case decodingHeader
+    case decodingLength
+    case decodingData
+    public static func == (a: WYBOTFramework.LightMQTT.MQTTMessageParserState, b: WYBOTFramework.LightMQTT.MQTTMessageParserState) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  final public var receivingMessage: ((_ topic: Swift.String, _ message: Swift.String) -> ())?
+  final public var receivingBuffer: ((_ topic: Swift.String, _ buffer: Swift.UnsafeBufferPointer<Swift.UTF8.CodeUnit>) -> ())?
+  final public var receivingBytes: ((_ topic: Swift.String, _ bytes: [Swift.UTF8.CodeUnit]) -> ())?
+  final public var receivingData: ((_ topic: Swift.String, _ data: Foundation.Data) -> ())?
+  public struct Options {
+    public var port: Swift.Int?
+    public var pingInterval: Swift.UInt16
+    public var useTLS: Swift.Bool
+    public var securityLevel: Foundation.StreamSocketSecurityLevel
+    public var allowUntrustCACertificate: Swift.Bool
+    public var networkServiceType: Foundation.StreamNetworkServiceTypeValue
+    public var username: Swift.String?
+    public var password: Swift.String?
+    public var clientId: Swift.String?
+    public var bufferSize: Swift.Int
+    public var readQosClass: Dispatch.DispatchQoS.QoSClass
+    public var concretePort: Swift.Int {
+      get
+    }
+    public init(port: Swift.Int? = nil, pingInterval: Swift.UInt16 = 10, useTLS: Swift.Bool = false, securityLevel: Foundation.StreamSocketSecurityLevel = StreamSocketSecurityLevel.tlSv1, allowUntrustCACertificate: Swift.Bool = false, networkServiceType: Foundation.StreamNetworkServiceTypeValue = StreamNetworkServiceTypeValue.background, username: Swift.String? = nil, password: Swift.String? = nil, clientId: Swift.String? = nil, bufferSize: Swift.Int = 4096, readQosClass: Dispatch.DispatchQoS.QoSClass = .background)
+  }
+  public init(host: Swift.String, options: WYBOTFramework.LightMQTT.Options = Options())
+  @objc deinit
+  final public var isConnected: Swift.Bool {
+    get
+  }
+  final public func connect(completion: ((_ success: Swift.Bool) -> ())? = nil)
+  final public func disconnect(streams: (input: Foundation.InputStream, output: Foundation.OutputStream)? = nil)
+  final public func subscribe(to topic: Swift.String)
+  final public func unsubscribe(from topic: Swift.String)
+  final public func publish(to topic: Swift.String, message: Foundation.Data?)
+}
+extension Swift.Array {
+  public func filterDuplicates<E>(_ filter: (Element) -> E) -> [Element] where E : Swift.Equatable
+}
+extension Foundation.Data {
+  public var bytes: [Swift.UInt8] {
+    get
+  }
+  public var hexString: Swift.String {
+    get
+  }
+  public func verifyData() -> Swift.Bool
+  public func checkSum() -> Foundation.Data
+}
+extension Foundation.Data {
+  public mutating func append(_ string: Swift.String, encoding: Swift.String.Encoding = .utf8)
+}
+#if compiler(>=5.3) && $AsyncAwait
+public func timeoutForTaskCompletion<R>(inNanoseconds timeout: Swift.UInt64, _ task: @escaping () async throws -> R) async throws -> R
+#endif
+#if compiler(>=5.3) && $AsyncAwait && $Sendable && $InheritActorContext
+public func withTimeout<Return>(inSeconds: Swift.UInt64, @_inheritActorContext _ operation: @escaping @Sendable () async throws -> Return) async throws -> Return where Return : Swift.Sendable
+#endif
+#if compiler(>=5.3) && $AsyncAwait && $Sendable && $InheritActorContext
+#if $UnsafeInheritExecutor
+@_unsafeInheritExecutor public func withTimeout<Return>(nanoseconds: Swift.UInt64, @_inheritActorContext _ operation: @escaping @Sendable () async throws -> Return) async throws -> Return where Return : Swift.Sendable
+#else
+public func withTimeout<Return>(nanoseconds: Swift.UInt64, @_inheritActorContext _ operation: @escaping @Sendable () async throws -> Return) async throws -> Return where Return : Swift.Sendable
+#endif
+#endif
+public struct WYDataPoint : Swift.Codable {
+  public struct dataPoint : Swift.Codable {
+    public init(id: Swift.Int, type: Swift.Int, len: Swift.Int, dataString: Swift.String)
+    public func encode(to encoder: any Swift.Encoder) throws
+    public init(from decoder: any Swift.Decoder) throws
+  }
+  public init(cmd: Swift.Int, dp: [WYBOTFramework.WYDataPoint.dataPoint])
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum WYStatus : Swift.Int {
+  case manaul
+  case stop
+  case start
+  case test
+  case returning
+  case shutting
+  case warning
+  case factory
+  case iot
+  case unknown
+  case relay
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum WYCleanMode : Swift.Int {
+  case floor
+  case wall
+  case combo
+  case full
+  case waterline
+  case strong
+  case eco
+  case none
+  public func strings() -> Swift.String
+  public func icons() -> Swift.String
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum WYDockStatus : Swift.Int {
+  case idle
+  case progress
+  case arrived
+  case done
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct WYCycleTimer : Swift.Equatable {
+  public var schedule: Swift.Bool
+  public var gap: Swift.Int8
+  public var value: Swift.Int8
+  public var version: Swift.Int
+  public init(schedule: Swift.Bool, gap: Swift.Int8, value: Swift.Int8)
+  public func strings() -> Swift.String
+  public static func == (a: WYBOTFramework.WYCycleTimer, b: WYBOTFramework.WYCycleTimer) -> Swift.Bool
+}
+public struct Pool : Swift.Codable, Swift.Equatable, Swift.Identifiable {
+  public let id: Swift.Int
+  public var name: Swift.String
+  public var shape: Swift.String
+  public var slope: Swift.String
+  public var material: Swift.String
+  public init(name: Swift.String, shape: Swift.String, slope: Swift.String, material: Swift.String)
+  public static func == (a: WYBOTFramework.Pool, b: WYBOTFramework.Pool) -> Swift.Bool
+  public typealias ID = Swift.Int
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum PoolShape : Swift.Int {
+  case rectangle
+  case round
+  case irregular
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum PoolSlope : Swift.Int {
+  case flat
+  case deep
+  case hopper
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum PoolMaterial : Swift.Int {
+  case rough
+  case standard
+  case smooth
+  case fiber
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum WYUnit : Swift.Int {
+  case power
+  case robot
+  case led
+  case iot
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum WYCalibrate : Swift.Int {
+  case calibrating
+  case failed
+  case success
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct WYWeekPlan : Swift.Identifiable, Swift.Equatable {
+  public var id: Foundation.UUID
+  public let weekday: Swift.Int
+  public var timeString: Foundation.Date
+  public var scheduled: Swift.Bool
+  public init(id: Foundation.UUID = UUID(), weekday: Swift.Int, timeString: Foundation.Date = Date(), scheduled: Swift.Bool)
+  public func weekDayTitle() -> Swift.String
+  public static func == (a: WYBOTFramework.WYWeekPlan, b: WYBOTFramework.WYWeekPlan) -> Swift.Bool
+  public typealias ID = Foundation.UUID
+}
+public struct WYWifiInfo : Swift.Identifiable, Swift.Equatable {
+  public var ssid: Swift.String
+  public var rssi: Swift.Int8
+  public let id: Foundation.UUID
+  public init(_ ssid: Swift.String, _ rssi: Swift.Int8)
+  public static func == (a: WYBOTFramework.WYWifiInfo, b: WYBOTFramework.WYWifiInfo) -> Swift.Bool
+  public typealias ID = Foundation.UUID
+}
+public enum WYError : Swift.Error, Swift.Identifiable {
+  public var id: Swift.String {
+    get
+  }
+  case noPrivacy
+  case userExist
+  case passwordWrong
+  case emailError
+  case deviceExist
+  case networkingFailed(Swift.Int)
+  case noBlePerphialConnected
+  case noWriteCharacteristic
+  case noReadCharacteristic
+  case requestError(Swift.String)
+  case apiKeyInvalid
+  case passvalidate
+  case disconnectWithError
+  case bleDataValidError
+  public typealias ID = Swift.String
+}
+extension WYBOTFramework.WYError : Foundation.LocalizedError {
+  public var description: Swift.String {
+    get
+  }
+}
+public struct ScanDevice : Swift.Equatable, Swift.Identifiable {
+  public let id: Foundation.UUID
+  public var model: Swift.String
+  public var name: Swift.String
+  public var type: Swift.String
+  public let peripheral: CoreBluetooth.CBPeripheral
+  public let rssi: Swift.Int
+  public init(peripheral: CoreBluetooth.CBPeripheral, rssi: Swift.Int, name: Swift.String, model: Swift.String)
+  public static func == (a: WYBOTFramework.ScanDevice, b: WYBOTFramework.ScanDevice) -> Swift.Bool
+  public typealias ID = Foundation.UUID
+}
+public enum HTTPMethod : Swift.String {
+  case GET
+  case POST
+  case PUT
+  case HEAD
+  case DELETE
+  case PATCH
+  case OPTIONS
+  case TRACE
+  case CONNECT
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol Request {
+  var url: Swift.String { get }
+  var path: Swift.String { get }
+  var method: WYBOTFramework.HTTPMethod { get }
+  var parameter: [Swift.String : Any] { get }
+  var header: Swift.String { get }
+}
+public struct HttpClient<Returnable> where Returnable : Swift.Decodable {
+}
+public class WYLib {
+  public static let shared: WYBOTFramework.WYLib
+  public init()
+  public static func config(apiKey: Swift.String)
+  public static func config(debug: Swift.Bool)
+  public static func config(timeout: Swift.UInt64)
+  #if compiler(>=5.3) && $AsyncAwait
+  public func login(_ user: Swift.String, password: Swift.String) async throws -> WYBOTFramework.User
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func register(_ user: Swift.String, password: Swift.String, name: Swift.String) async throws -> WYBOTFramework.User
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func verifyCode(_ email: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func resetPassword(email: Swift.String, password: Swift.String, key: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func auth2(_ userId: Swift.String, credential: Swift.String, email: Swift.String, name: Swift.String, authType: WYBOTFramework.AuthType, idToken: Swift.String) async throws -> WYBOTFramework.User
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func editUser(_ userId: Swift.String, token: Swift.String, name: Swift.String?, avatar: Swift.String?) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func deleteUser(_ userId: Swift.String, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func bindDevice(_ device: WYBOTFramework.Device, token: Swift.String) async throws -> WYBOTFramework.Device
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func editDevice(_ device: WYBOTFramework.Device, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func autoUpdateDevice(_ device: WYBOTFramework.Device, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func editUserPool(_ device: WYBOTFramework.Device, poolId: Swift.Int, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func removeDevice(_ deviceId: Swift.String, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func deviceList(_ userId: Swift.String, token: Swift.String) async throws -> [WYBOTFramework.Device]
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func deviceVersion(_ units: [WYBOTFramework.DeviceVersion], token: Swift.String) async throws -> [WYBOTFramework.FirmwareInfo]
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func poolList(token: Swift.String) async throws -> [WYBOTFramework.Pool]
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func editPool(_ id: Swift.Int, name: Swift.String, shape: WYBOTFramework.PoolShape, slope: WYBOTFramework.PoolSlope, material: WYBOTFramework.PoolMaterial, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func deletePool(_ id: Swift.Int, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func addPool(_ name: Swift.String, shape: WYBOTFramework.PoolShape, slope: WYBOTFramework.PoolSlope, material: WYBOTFramework.PoolMaterial, token: Swift.String) async throws -> WYBOTFramework.Pool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func uploadUrls(_ medias: [WYBOTFramework.WYMedia], index: Swift.Int, userId: Swift.String, result: WYBOTFramework.WYMediaResult) async throws -> (Swift.Bool, WYBOTFramework.WYMediaResult)
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func uploadImage(_ image: UIKit.UIImage, name: Swift.String) async throws -> [Swift.String : Swift.String]
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func feedback(name: Swift.String, email: Swift.String, images: [Swift.String], videos: [Swift.String], info: Swift.String, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func currentWeather(lat: Swift.Double, lon: Swift.Double) async throws -> WYBOTFramework.WeatherData
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func startBle() async throws -> CoreBluetooth.CBManagerState
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+  public func searchDevice() async throws -> _Concurrency.AsyncThrowingStream<WYBOTFramework.ScanDevice, any Swift.Error>
+  #endif
+  public func stopSearchDevice()
+  #if compiler(>=5.3) && $AsyncAwait
+  public func refreshDevicesWanState(_ devices: [WYBOTFramework.Device]) async throws -> _Concurrency.AsyncThrowingStream<WYBOTFramework.Device, any Swift.Error>
+  #endif
+  public func disconnect()
+  #if compiler(>=5.3) && $AsyncAwait
+  public func connectDevice(_ device: WYBOTFramework.Device) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func connectPeriperal(_ periperal: CoreBluetooth.CBPeripheral) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func deviceInfo() async throws -> WYBOTFramework.Device
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func devicePowerUnit() async throws -> WYBOTFramework.Device
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func searchWiFi() async throws -> [WYBOTFramework.WYWifiInfo]
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setWiFi(_ ssid: Swift.String, password: Swift.String) async throws -> Swift.Bool
+  #endif
+  public func update(device: WYBOTFramework.ScanDevice, for unit: WYBOTFramework.WYUnit, with firmware: Foundation.Data)
+  #if compiler(>=5.3) && $AsyncAwait
+  public func batteryInfo(for deviceId: Swift.String, with token: Swift.String) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func batteryInfo() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setCleanMode(_ mode: WYBOTFramework.WYCleanMode, to device: Swift.String, with token: Swift.String) async throws -> WYBOTFramework.WYCleanMode
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func cleanMode(deviceId: Swift.String) async throws -> _Concurrency.AsyncThrowingStream<WYBOTFramework.WYCleanMode, any Swift.Error>
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func cleanMode() async throws -> _Concurrency.AsyncThrowingStream<WYBOTFramework.WYCleanMode, any Swift.Error>
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func startClean(_ start: Swift.Bool) async throws -> WYBOTFramework.WYStatus
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func startClean(_ start: Swift.Bool, to deviceId: Swift.String, with token: Swift.String) async throws -> WYBOTFramework.WYStatus
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func cleanStatus() async throws -> _Concurrency.AsyncThrowingStream<WYBOTFramework.WYStatus, any Swift.Error>
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func cleanStatus(_ deviceId: Swift.String) async throws -> _Concurrency.AsyncThrowingStream<WYBOTFramework.WYStatus, any Swift.Error>
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func runningTime() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func runningTime(_ deviceId: Swift.String) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func delay() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func delay(_ deviceId: Swift.String) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setDelay(_ delay: Swift.Int) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setDelay(_ delay: Swift.Int, to deviceId: Swift.String, with token: Swift.String) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func workTime() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func workTime(for deviceId: Swift.String) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setWorkTime(_ time: Swift.Int) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setWorkTime(_ time: Swift.Int, to deviceId: Swift.String, with token: Swift.String) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func dockStatus() async throws -> WYBOTFramework.WYDockStatus
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func dockStatus(for deviceId: Swift.String) async throws -> WYBOTFramework.WYDockStatus
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func dock(start: Swift.Bool) async throws -> WYBOTFramework.WYDockStatus
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func dock(start: Swift.Bool, to deviceId: Swift.String, with token: Swift.String) async throws -> WYBOTFramework.WYDockStatus
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func deviceFuns() async throws -> WYBOTFramework.WYFunction
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func deviceFuns(for deviceId: Swift.String) async throws -> WYBOTFramework.WYFunction
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func cycleTimer() async throws -> WYBOTFramework.WYCycleTimer
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func cycleTimer(for deviceId: Swift.String) async throws -> WYBOTFramework.WYCycleTimer
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setCycleTimer(_ timer: WYBOTFramework.WYCycleTimer) async throws -> WYBOTFramework.WYCycleTimer
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setCycleTimer(_ timer: WYBOTFramework.WYCycleTimer, to deviceId: Swift.String, with token: Swift.String) async throws -> WYBOTFramework.WYCycleTimer
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func weekTimer(deviceId: Swift.String) async throws -> [WYBOTFramework.WYWeekPlan]
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setWeekTimer(plans: [WYBOTFramework.WYWeekPlan]) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setWeekTimer(_ plans: [WYBOTFramework.WYWeekPlan], deviceId: Swift.String, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  public func wakeLteUp(deviceId: Swift.String, token: Swift.String)
+  #if compiler(>=5.3) && $AsyncAwait
+  public func floorPattern(deviceId: Swift.String) async throws -> WYBOTFramework.WYPatterns
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func wallPattern(deviceId: Swift.String) async throws -> WYBOTFramework.WYPatterns
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setPattern(floor: WYBOTFramework.WYPatterns, wall: WYBOTFramework.WYPatterns) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setPattern(floor: WYBOTFramework.WYPatterns, wall: WYBOTFramework.WYPatterns, deviceId: Swift.String, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setWallPattern(_ wall: WYBOTFramework.WYPatterns) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setWallPattern(_ wall: WYBOTFramework.WYPatterns, deviceId: Swift.String, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setFloorPattern(_ floor: WYBOTFramework.WYPatterns) async throws -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setFloorPattern(_ floor: WYBOTFramework.WYPatterns, deviceId: Swift.String, token: Swift.String) async throws -> Swift.Bool
+  #endif
+  public func pumpControl(deviceId: Swift.String, on: Swift.Bool) throws
+  public func manaulControl(deviceId: Swift.String, point: CoreFoundation.CGSize) throws
+  public func areaClean(deviceId: Swift.String, token: Swift.String) throws
+  #if compiler(>=5.3) && $AsyncAwait
+  public func calibratingState(deviceId: Swift.String) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func calibrateSensor(deviceId: Swift.String, token: Swift.String) async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func updateFirmware(deviceId: Swift.String) async throws -> _Concurrency.AsyncThrowingStream<Swift.Int, any Swift.Error>
+  #endif
+  @objc deinit
+}
+public struct Device : Swift.Codable, Swift.Equatable, Swift.Identifiable {
+  public static func == (lhs: WYBOTFramework.Device, rhs: WYBOTFramework.Device) -> Swift.Bool
+  public var id: Swift.String
+  public let deviceId: Swift.String
+  public var deviceName: Swift.String
+  public let deviceType: Swift.String
+  public let bleName: Swift.String
+  public var version: WYBOTFramework.Version?
+  public var bleState: Swift.Bool
+  public var wifiState: Swift.Bool
+  public var hasUpdate: Swift.Bool
+  public var poolId: Swift.Int?
+  public var autoUpdate: Swift.Bool?
+  public init(deviceId: Swift.String, deviceName: Swift.String, deviceType: Swift.String, bleName: Swift.String, version: WYBOTFramework.Version? = nil, bleState: Swift.Bool = false)
+  public init(from decoder: any Swift.Decoder) throws
+  public typealias ID = Swift.String
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+public struct Version : Swift.Codable {
+  public let Firmware: Swift.String?
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct DeviceVersion {
+  public let type: Swift.String
+  public let hardVer: Swift.String
+  public let solfVer: Swift.String
+  public init(type: Swift.String, hardVer: Swift.String, solfVer: Swift.String)
+}
+public struct FirmwareInfo : Swift.Codable, Swift.Equatable, Swift.Identifiable {
+  public var id: Foundation.UUID
+  public let BoardID: Swift.String
+  public let SoftwareVer: Swift.String
+  public let Release: Swift.String
+  public let Url: Swift.String
+  public init(from decoder: any Swift.Decoder) throws
+  public static func == (a: WYBOTFramework.FirmwareInfo, b: WYBOTFramework.FirmwareInfo) -> Swift.Bool
+  public typealias ID = Foundation.UUID
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+public struct UpdatingProgress : Swift.Codable {
+  public var boardID: Swift.String
+  public var progress: Swift.Int
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct WYMediaResult : Swift.Equatable {
+  public var images: [Swift.String]
+  public var videos: [Swift.String]
+  public init(images: [Swift.String], videos: [Swift.String])
+  public static func == (a: WYBOTFramework.WYMediaResult, b: WYBOTFramework.WYMediaResult) -> Swift.Bool
+}
+public struct WYMedia : Swift.Equatable, Swift.Hashable {
+  public static func == (lhs: WYBOTFramework.WYMedia, rhs: WYBOTFramework.WYMedia) -> Swift.Bool
+  public var id: Foundation.UUID
+  public var type: WYBOTFramework.WYMediaType
+  public var image: UIKit.UIImage?
+  public var video: Foundation.URL?
+  public init(id: Foundation.UUID, type: WYBOTFramework.WYMediaType, image: UIKit.UIImage? = nil, video: Foundation.URL? = nil)
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum WYMediaType {
+  case image, video
+  public static func == (a: WYBOTFramework.WYMediaType, b: WYBOTFramework.WYMediaType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct User : Swift.Codable, Swift.Equatable {
+  public let userId: Swift.String
+  public let token: Swift.String
+  public let username: Swift.String
+  public var name: Swift.String
+  public var avatar: Swift.String
+  public static func == (a: WYBOTFramework.User, b: WYBOTFramework.User) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct WYFunctions : Swift.Codable {
+  public var model: Swift.String
+  public var function: WYBOTFramework.WYFunction
+  public init(model: Swift.String, function: WYBOTFramework.WYFunction)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum WYType : Swift.Codable {
+  case wire
+  case battery
+  case floatBattery
+  public static func == (a: WYBOTFramework.WYType, b: WYBOTFramework.WYType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum WYControls : Swift.Codable {
+  case manaul
+  case lift
+  case area
+  public static func == (a: WYBOTFramework.WYControls, b: WYBOTFramework.WYControls) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum WYSensors : Swift.Codable {
+  case imu
+  case ir
+  case depth
+  case temperature
+  public static func == (a: WYBOTFramework.WYSensors, b: WYBOTFramework.WYSensors) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum WYSchedules : Swift.Codable {
+  case week
+  case cycle
+  case cycleCount
+  case smart
+  case delay
+  case duration
+  public static func == (a: WYBOTFramework.WYSchedules, b: WYBOTFramework.WYSchedules) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum WYPatterns : Swift.Codable {
+  case star
+  case cross
+  case z
+  case h
+  case s
+  case n
+  case water
+  public init(from value: Swift.Int)
+  public func strings() -> Swift.String
+  public func icons() -> Swift.String
+  public func IntString() -> Swift.String
+  public static func == (a: WYBOTFramework.WYPatterns, b: WYBOTFramework.WYPatterns) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum WYCombos : Swift.Codable {
+  case once
+  case twice
+  public static func == (a: WYBOTFramework.WYCombos, b: WYBOTFramework.WYCombos) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct WYFunction : Swift.Codable, Swift.Equatable {
+  public var type: WYBOTFramework.WYType
+  public var controls: [WYBOTFramework.WYControls]
+  public var sensors: [WYBOTFramework.WYSensors]
+  public var schedules: [WYBOTFramework.WYSchedules]
+  public var floorModes: [WYBOTFramework.WYPatterns]
+  public var wallModes: [WYBOTFramework.WYPatterns]
+  public var comboModes: [WYBOTFramework.WYCombos]
+  public var wholeModes: [WYBOTFramework.WYPatterns]
+  public var lineModes: [WYBOTFramework.WYPatterns]
+  public var turboModes: [WYBOTFramework.WYPatterns]
+  public var ecoModes: [WYBOTFramework.WYPatterns]
+  public init(deviceType: Swift.String)
+  public static func == (a: WYBOTFramework.WYFunction, b: WYBOTFramework.WYFunction) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct WeatherData : Swift.Codable, Swift.Equatable {
+  public static func == (lhs: WYBOTFramework.WeatherData, rhs: WYBOTFramework.WeatherData) -> Swift.Bool
+  public var weather: [WYBOTFramework.WeatherData.Weather]
+  public var main: WYBOTFramework.WeatherData.Main
+  public struct Weather : Swift.Codable {
+    public var icon: Swift.String
+    public func encode(to encoder: any Swift.Encoder) throws
+    public init(from decoder: any Swift.Decoder) throws
+  }
+  public struct Main : Swift.Codable {
+    public var temp: Swift.Float
+    public func encode(to encoder: any Swift.Encoder) throws
+    public init(from decoder: any Swift.Decoder) throws
+  }
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum AuthType {
+  case facebook
+  case dreame
+  case google
+  case apple
+  case tiktok
+  case twitter
+  case wechat
+  public func strings() -> Swift.String
+  public static func == (a: WYBOTFramework.AuthType, b: WYBOTFramework.AuthType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension WYBOTFramework.LightMQTT.MQTTMessageParserState : Swift.Equatable {}
+extension WYBOTFramework.LightMQTT.MQTTMessageParserState : Swift.Hashable {}
+extension WYBOTFramework.WYStatus : Swift.Equatable {}
+extension WYBOTFramework.WYStatus : Swift.Hashable {}
+extension WYBOTFramework.WYStatus : Swift.RawRepresentable {}
+extension WYBOTFramework.WYCleanMode : Swift.Equatable {}
+extension WYBOTFramework.WYCleanMode : Swift.Hashable {}
+extension WYBOTFramework.WYCleanMode : Swift.RawRepresentable {}
+extension WYBOTFramework.WYDockStatus : Swift.Equatable {}
+extension WYBOTFramework.WYDockStatus : Swift.Hashable {}
+extension WYBOTFramework.WYDockStatus : Swift.RawRepresentable {}
+extension WYBOTFramework.PoolShape : Swift.Equatable {}
+extension WYBOTFramework.PoolShape : Swift.Hashable {}
+extension WYBOTFramework.PoolShape : Swift.RawRepresentable {}
+extension WYBOTFramework.PoolSlope : Swift.Equatable {}
+extension WYBOTFramework.PoolSlope : Swift.Hashable {}
+extension WYBOTFramework.PoolSlope : Swift.RawRepresentable {}
+extension WYBOTFramework.PoolMaterial : Swift.Equatable {}
+extension WYBOTFramework.PoolMaterial : Swift.Hashable {}
+extension WYBOTFramework.PoolMaterial : Swift.RawRepresentable {}
+extension WYBOTFramework.WYUnit : Swift.Equatable {}
+extension WYBOTFramework.WYUnit : Swift.Hashable {}
+extension WYBOTFramework.WYUnit : Swift.RawRepresentable {}
+extension WYBOTFramework.WYCalibrate : Swift.Equatable {}
+extension WYBOTFramework.WYCalibrate : Swift.Hashable {}
+extension WYBOTFramework.WYCalibrate : Swift.RawRepresentable {}
+extension WYBOTFramework.HTTPMethod : Swift.Equatable {}
+extension WYBOTFramework.HTTPMethod : Swift.Hashable {}
+extension WYBOTFramework.HTTPMethod : Swift.RawRepresentable {}
+extension WYBOTFramework.WYMediaType : Swift.Equatable {}
+extension WYBOTFramework.WYMediaType : Swift.Hashable {}
+extension WYBOTFramework.WYType : Swift.Equatable {}
+extension WYBOTFramework.WYType : Swift.Hashable {}
+extension WYBOTFramework.WYControls : Swift.Equatable {}
+extension WYBOTFramework.WYControls : Swift.Hashable {}
+extension WYBOTFramework.WYSensors : Swift.Equatable {}
+extension WYBOTFramework.WYSensors : Swift.Hashable {}
+extension WYBOTFramework.WYSchedules : Swift.Equatable {}
+extension WYBOTFramework.WYSchedules : Swift.Hashable {}
+extension WYBOTFramework.WYPatterns : Swift.Equatable {}
+extension WYBOTFramework.WYPatterns : Swift.Hashable {}
+extension WYBOTFramework.WYCombos : Swift.Equatable {}
+extension WYBOTFramework.WYCombos : Swift.Hashable {}
+extension WYBOTFramework.AuthType : Swift.Equatable {}
+extension WYBOTFramework.AuthType : Swift.Hashable {}

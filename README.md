@@ -239,4 +239,3 @@ let result = wylib.setCycleTimer(.onec, to: deviceId, with: token)
 
 ```
 
-/
